@@ -1,0 +1,62 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Suit {
+  id         Int       @id @default(autoincrement())
+  model      String
+  type       String // costume mariage, invité
+  blazerSize String[]
+  vestSize   String[]
+  pantSize   String[]
+  Location   Location? @relation(fields: [locationId], references: [id])
+  locationId Int?
+}
+
+model Shirt {
+  id         Int       @id @default(autoincrement())
+  type       String // papillion | cravate
+  color      String
+  size       String[]
+  Location   Location? @relation(fields: [locationId], references: [id])
+  locationId Int?
+}
+
+model Shoe {
+  id         Int       @id @default(autoincrement())
+  model      String
+  size       String[]
+  Location   Location? @relation(fields: [locationId], references: [id])
+  locationId Int?
+}
+
+model Accessory {
+  id         Int       @id @default(autoincrement())
+  label      String
+  Location   Location? @relation(fields: [LocationId], references: [id])
+  LocationId Int?
+}
+
+model Location {
+  id            Int         @id @default(autoincrement())
+  location_date DateTime
+  suit          Suit[]
+  shirt         Shirt[]
+  shoe          Shoe[]
+  accessory     Accessory[]
+  Client        Client?     @relation(fields: [clientId], references: [id])
+  clientId      Int?
+}
+
+model Client {
+  id       Int        @id @default(autoincrement())
+  name     String
+  phone    String
+  location Location[]
+}
